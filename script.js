@@ -14,42 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    function isValidUrl(url) {
-        const instagramUrlPattern = /^(https?:\/\/)?(www\.)?instagram\.com\/(p|tv|reel)\/([\w-]+)/i;
-        return instagramUrlPattern.test(url);
-    }
-
     submitBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const videoUrl = videoUrlInput.value.trim();
 
-        if (isValidUrl(videoUrl)) {
-            fetch('/download', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ url: videoUrl })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.downloadUrl;
-                } else {
-                    alert('Failed to download video. Please check the URL and try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to download video. Please try again later.');
-            });
-        } else {
-            alert('Please enter a valid Instagram video URL.');
-        }
+        fetch('/download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: videoUrl })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.downloadUrl;
+            } else {
+                alert('Failed to download video. Please check the URL and try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to download video. Please try again later.');
+        });
     });
 });
